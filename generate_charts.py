@@ -41,7 +41,6 @@ plt.xticks([i + bar_width / 2 for i in index_exp1], configurations, rotation=45)
 plt.legend()
 plt.tight_layout()
 plt.savefig('plot_experiment1.png')
-plt.show()
 
 # Plot for Experiment 2 (CPU vs GPU times for varying input sizes)
 plt.figure(figsize=(12, 6))  # Increase the figure size for better spacing
@@ -76,4 +75,3 @@ plt.xticks([i + bar_width / 2 for i in index_exp2], input_sizes, rotation=45, ha
 plt.legend()
 plt.tight_layout()
 plt.savefig('plot_experiment2.png')
-plt.show()
