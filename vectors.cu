@@ -9,7 +9,9 @@
 #define THREADS_PER_BLOCK 500
 
 /*** TODO: insert the declaration of the kernel function below this line ***/
+
 __global__ void vecGPU(float *ad, float *bd, float *cd, int n);
+
 /**** end of the kernel declaration ***/
 
 
@@ -81,6 +83,7 @@ int main(int argc, char *argv[]){
 		1. allocate ad, bd, and cd in the device
 		2. send a, b, and c to the device  
 	*/
+
 	int size = n * sizeof(float);
 
 	//Allocate the arrays in the device
@@ -131,6 +134,8 @@ int main(int argc, char *argv[]){
 	int threadsPerBlock = THREADS_PER_BLOCK;
     int blocksPerGrid = BLOCKS;
 
+	printf("Configuration: %d blocks and %d threads per block\n", blocksPerGrid, threadsPerBlock);
+
 	//Launch the kernel
 	vecGPU<<<blocksPerGrid, threadsPerBlock>>>(ad, bd, cd, n);
 
@@ -172,9 +177,12 @@ int main(int argc, char *argv[]){
 
 /**** TODO: Write the kernel itself below this line *****/
 
-__global__ void vecGPU(float *ad, float *bd, float *cd, int n) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) {
-        cd[idx] += ad[idx] * bd[idx];
+__global__ void vecGPU(float* ad, float* bd, float* cd, int n) {
+    int totalNumOfThreads = blockDim.x * gridDim.x;
+    int threadId = (blockIdx.x * blockDim.x) + threadIdx.x;
+
+    //Loop over elements in chunks of totalNumOfThreads such that each thread handles multiple elements
+	for (int i = threadId; i < n; i += totalNumOfThreads) {
+        cd[i] += ad[i] * bd[i];
     }
 }
