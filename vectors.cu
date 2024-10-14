@@ -4,9 +4,6 @@
 #include <cuda.h>
 
 #define RANGE 17.78
-// Constants for blocks and threads per block
-#define BLOCKS 4
-#define THREADS_PER_BLOCK 500
 
 /*** TODO: insert the declaration of the kernel function below this line ***/
 
@@ -18,21 +15,30 @@ __global__ void vecGPU(float *ad, float *bd, float *cd, int n);
 int main(int argc, char *argv[]){
 
 	int n = 0; //number of elements in the arrays
+	int blocksPerGrid = 0; //number of blocks per grid
+	int threadsPerBlock = 0; //number of threads per block
 	int i;  //loop index
 	float *a, *b, *c; // The arrays that will be processed in the host.
 	float *temp;  //array in host used in the sequential code.
 	float *ad, *bd, *cd; //The arrays that will be processed in the device.
 	clock_t start, end; // to meaure the time taken by a specific part of code
 	
-	if(argc != 2){
+	if(argc != 4){
 		printf("usage:  ./vectorprog n\n");
 		printf("n = number of elements in each vector\n");
+		printf("blocksPerGrid = number of blocks in each grid\n");
+		printf("threadsPerBlock = number of threads in each block\n");
 		exit(1);
 		}
 		
 	n = atoi(argv[1]);
 	printf("Each vector will have %d elements\n", n);
+
+	blocksPerGrid = atoi(argv[2]);
+	printf("Each grid will have %d blocks\n", blocksPerGrid);
 	
+	threadsPerBlock = atoi(argv[3]);
+	printf("Each block will have %d threads\n", blocksPerGrid);
 	
 	//Allocating the arrays in the host
 	
@@ -130,11 +136,6 @@ int main(int argc, char *argv[]){
 		4. call the kernel (the kernel itself will be written at the comment at the end of this file), 
 		   you need to decide about the number of threads, blocks, etc and their geometry.
 	*/
-
-	int threadsPerBlock = THREADS_PER_BLOCK;
-    int blocksPerGrid = BLOCKS;
-
-	printf("Configuration: %d blocks and %d threads per block\n", blocksPerGrid, threadsPerBlock);
 
 	//Launch the kernel
 	vecGPU<<<blocksPerGrid, threadsPerBlock>>>(ad, bd, cd, n);
