@@ -12,32 +12,8 @@ The task is to compute the operation `c[i] += a[i] * b[i]` for three dynamically
 - Perform vector multiplication both on the CPU and GPU.
 - Measure and compare the execution time of CPU and GPU implementations.
 - Experiment with different CUDA configurations (blocks and threads).
-  
-## Experiments
 
-### Experiment 1:
-**Objective**: Investigate the speedup achieved using various configurations of blocks and threads.
-
-- Fix `n = 1,000,000` (one million).
-- Compare speedup for the following configurations:
-  - (4 blocks, 500 threads)
-  - (8 blocks, 500 threads)
-  - (16 blocks, 500 threads)
-  - (4 blocks, 250 threads)
-  - (8 blocks, 250 threads)
-  - (16 blocks, 250 threads)
-  
-- **Output**: Bar graph showing the speedup for each configuration.
-
-### Experiment 2:
-**Objective**: Analyze the speedup as the problem size `n` increases.
-
-- Fix the configuration to 8 blocks and 500 threads.
-- Measure speedup for `n = 100`, `1000`, `10000`, `100000`, `1,000,000`, `10,000,000`, and `100,000,000`.
-
-- **Output**: Bar graph showing speedup for each value of `n`.
-
-## Getting Started
+## Compilation and Execution
 
 ### Prerequisites
 
@@ -45,44 +21,61 @@ The task is to compute the operation `c[i] += a[i] * b[i]` for three dynamically
 - nvcc (NVIDIA CUDA Compiler)
 - Access to a CUDA-compatible GPU
 
-### Compilation and Execution
+### Compiling the Program
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/manisha-goyal/cuda-vector-processing.git
-   ```
-   
-2. Navigate to the project directory:
-   ```bash
-   cd cuda-vector-processing
-   ```
+Once you have transferred the `vectors.cu` file to the server, navigate to the directory where it is located and run the following command to compile the program:
 
-3. Compile the program using `nvcc`:
-   ```bash
-   nvcc -o vectorprog vectors.cu -lm
-   ```
+```bash
+nvcc -o vectorprog vectors.cu
+```
 
-4. Run the program:
-   ```bash
-   ./vectorprog
-   ```
+This command will compile the `vectors.cu` file and generate an executable called `vectorprog`.
+
+### Running the Program
+
+To run the program, execute the compiled binary and provide the number of elements `n` as an argument. For example, to run the program with 1,000,000 elements:
+
+```bash
+./vectorprog 1000000
+```
+
+#### **Modifying Block and Thread Count:**
+Before running the program, ensure that you modify the block and thread count in the code to match your experimental setup. These constants can be found at the top of the source code (`vectors.cu`):
+
+```cpp
+#define BLOCKS 8
+#define THREADS_PER_BLOCK 500
+```
+
+You need to change these values based on your experiment. For example:
+- For 4 blocks and 500 threads per block:
+  ```cpp
+  #define BLOCKS 4
+  #define THREADS_PER_BLOCK 500
+  ```
+
+The program will calculate how many threads and blocks to use based on these constants.
 
 ### Expected Output
 
 The program will print:
 - The time taken for the sequential operation on the CPU.
 - The time taken for the parallel operation on the GPU.
-- A comparison of the results to ensure correctness.
+- Any mismatches between the results of the sequential and parallel operations, if present.
 
-## Files
+For example:
 
-- **vectors.cu**: Main source code for the program.
-- **experiments.pdf**: Contains results and analysis of experiments.
+```bash
+Each vector will have 100 elements
+Total time taken by the sequential part = 0.000004
+Configuration: 8 blocks and 500 threads per block
+Total time taken by the GPU part = 0.000454
+```
 
 ## Notes
 
-- The floating-point precision between the CPU and GPU can slightly differ. Results are compared up to the second decimal point to ensure correctness.
-- In case of memory limitations for large values of `n`, note the maximum supported size and report it.
+- The floating-point precision between the CPU and GPU may slightly differ. Results are compared up to the second decimal place to ensure correctness.
+- Ensure that the number of blocks and threads per block matches the configuration specified for each experiment.
 
 ## License
 
