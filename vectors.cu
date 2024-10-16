@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 	printf("Each grid will have %d blocks\n", blocksPerGrid);
 	
 	threadsPerBlock = atoi(argv[3]);
-	printf("Each block will have %d threads\n", blocksPerGrid);
+	printf("Each block will have %d threads\n", threadsPerBlock);
 	
 	//Allocating the arrays in the host
 	
@@ -112,6 +112,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 
+	start = clock();
+
 	//Copy a, b, and c to the device
 
 	if (cudaMemcpy(ad, a, size, cudaMemcpyHostToDevice) != cudaSuccess) {
@@ -129,8 +131,6 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-	start = clock();
-
 	/* TODO: 	
 		3. write the kernel, call it: vecGPU
 		4. call the kernel (the kernel itself will be written at the comment at the end of this file), 
@@ -143,8 +143,6 @@ int main(int argc, char *argv[]){
 	//Block host till device is done
 	cudaDeviceSynchronize();
 
-	end = clock();
-
 	/* TODO: 
 		5. bring the cd array back from the device and store it in c array (declared earlier in main)
 		6. free ad, bd, and cd
@@ -155,6 +153,8 @@ int main(int argc, char *argv[]){
         printf("Error copying array c from device to host\n");
         exit(1);
     }
+
+	end = clock();
 
 	//Free the arrays in the device
     cudaFree(ad);
