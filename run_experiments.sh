@@ -4,7 +4,7 @@
 output_file="experiment_results.csv"
 
 # Write the header to the CSV file
-echo "experiment,blocks,threads,input_size,cpu_time,gpu_time" > $output_file
+echo "experiment,blocks,threads,input_size,cpu_time,gpu_time,speedup" > $output_file
 
 # Experiment 1: Varying Blocks and Threads, Fixed Input Size (1,000,000 elements)
 input_size=1000000
@@ -19,9 +19,10 @@ do
         # Extract CPU and GPU times from the output
         cpu_time=$(echo "$result" | grep "Total time taken by the sequential part" | awk '{print $9}')
         gpu_time=$(echo "$result" | grep "Total time taken by the GPU part" | awk '{print $9}')
-
+        
+        speedup=$(echo "scale=6; $cpu_time / $gpu_time" | bc)
         # Write the results to the CSV file
-        echo "experiment1,$blocks,$threads,$input_size,$cpu_time,$gpu_time" >> $output_file
+        echo "experiment1,$blocks,$threads,$input_size,$cpu_time,$gpu_time,$speedup" >> $output_file
     done
 done
 
@@ -38,8 +39,9 @@ do
     cpu_time=$(echo "$result" | grep "Total time taken by the sequential part" | awk '{print $9}')
     gpu_time=$(echo "$result" | grep "Total time taken by the GPU part" | awk '{print $9}')
 
+    speedup=$(echo "scale=6; $cpu_time / $gpu_time" | bc)
     # Write the results to the CSV file
-    echo "experiment2,$blocks,$threads,$input_size,$cpu_time,$gpu_time" >> $output_file
+    echo "experiment2,$blocks,$threads,$input_size,$cpu_time,$gpu_time,$speedup" >> $output_file
 done
 
 echo "Experiments completed! Results saved in $output_file."

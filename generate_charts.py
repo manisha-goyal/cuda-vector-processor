@@ -75,3 +75,62 @@ plt.xticks([i + bar_width / 2 for i in index_exp2], input_sizes, rotation=45, ha
 plt.legend()
 plt.tight_layout()
 plt.savefig('plot_experiment2.png')
+
+# Plot for Experiment 1 (Speedup for varying configurations)
+plt.figure(figsize=(12, 6))
+configurations = exp1_data.apply(lambda row: f"{row['blocks']}, {row['threads']}", axis=1)
+speedup_exp1 = exp1_data['speedup']
+
+# Define the index for Experiment 1 based on the number of configurations
+bar_width = 0.5
+index_exp1 = range(len(configurations))
+
+# Plot the bars for Speedup in Experiment 1
+speedup_bars_exp1 = plt.bar(index_exp1, speedup_exp1, bar_width, label='Speedup')
+
+# Add labels above each bar for Speedup values
+for bar in speedup_bars_exp1:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.2f}', va='bottom', ha='center', fontsize=8)
+
+# Add labels and title for Experiment 1
+plt.xlabel('Configuration (Blocks, Threads per Block)')
+plt.ylabel('Speedup (CPU Time / GPU Time)')
+plt.title('Speedup for varying block and thread configurations (Experiment 1)')
+
+# Adjust x-axis labels
+plt.xticks([i for i in index_exp1], configurations, rotation=45, ha='right')
+
+# Save the plot for Experiment 1
+plt.tight_layout()
+plt.savefig('plot_experiment1_speedup.png')
+plt.show()
+
+# Plot for Experiment 2 (Speedup for varying input sizes)
+plt.figure(figsize=(12, 6))
+input_sizes = exp2_data['input_size']
+speedup_exp2 = exp2_data['speedup']
+
+# Define the index for Experiment 2 based on the number of input sizes
+index_exp2 = range(len(input_sizes))
+
+# Plot the bars for Speedup in Experiment 2
+speedup_bars_exp2 = plt.bar(index_exp2, speedup_exp2, bar_width, label='Speedup')
+
+# Add labels above each bar for Speedup values
+for bar in speedup_bars_exp2:
+    yval = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.2f}', va='bottom', ha='center', fontsize=8)
+
+# Add labels and title for Experiment 2
+plt.xlabel('Input Size (elements)')
+plt.ylabel('Speedup (CPU Time / GPU Time)')
+plt.title('Speedup for varying input sizes (Experiment 2)')
+
+# Adjust x-axis labels
+plt.xticks([i for i in index_exp2], input_sizes, rotation=45, ha='right')
+
+# Save the plot for Experiment 2
+plt.tight_layout()
+plt.savefig('plot_experiment2_speedup.png')
+plt.show()
